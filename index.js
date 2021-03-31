@@ -17,19 +17,19 @@ client.on('message', message => {
 
 		if (message.content === '!ping') {
 			switch (message.author.tag) {
-			case 'jesipepsi#8657':
+			case process.env.JESIKA_TAG:
 				message.channel.send('No girls allowed.');
 				break;
-			case 'Jrigg#4257':
+			case process.env.JARED_TAG:
 				message.channel.send('poop');
 				break;
-			case 'Matt#2998':
+			case process.env.MATT_TAG:
 				message.channel.send('pong');
 				break;
-			case 'chaddy50#7854':
+			case process.env.NATHAN_TAG:
 				message.channel.send('Wtf');
 				break;
-			case 'Charrison947#8020':
+			case process.env.CHASE_TAG:
 				message.channel.send('It\'s not gay if you\'re underway.');
 				break;
 			default:
@@ -39,7 +39,7 @@ client.on('message', message => {
 	}
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.BOT_TOKEN);
 
 function isValidUser(author) {
 	return !author.bot;
