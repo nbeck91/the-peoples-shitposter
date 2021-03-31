@@ -50,7 +50,9 @@ client.on('message', message => {
 		}
 
 		if (message.content === '!listen') {
-			messageNathanInterval = setInterval(messageNathan, 3000);
+			if(!messageNathanInterval) {
+				messageNathanInterval = setInterval(messageNathan, 3000);
+			}
 		}
 
 		if (message.content === '!stop') {
