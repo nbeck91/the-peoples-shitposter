@@ -4,7 +4,7 @@ dotenv.config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-let messageNathanInterval;
+const intervalChannels = {};
 
 client.login(process.env.BOT_TOKEN);
 
@@ -13,6 +13,8 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
+	const channel = message.channel;
+
 	if (isValidUser(message.author)) {
 		console.log(JSON.stringify(message));
 		console.log(JSON.stringify(message.author.id));
@@ -22,65 +24,67 @@ client.on('message', message => {
 		if (message.content === '!ping') {
 			switch (message.author.tag) {
 				case process.env.JESIKA_TAG:
-					message.channel.send('No girls allowed.');
+					channel.send('No girls allowed.');
 					break;
 				case process.env.JARED_TAG:
-					message.channel.send('poop');
+					channel.send('poop');
 					break;
 				case process.env.MATT_TAG:
-					message.channel.send('pong');
+					channel.send('pong');
 					break;
 				case process.env.NATHAN_TAG:
-					message.channel.send('Wtf');
+					channel.send('Wtf');
 					break;
 				case process.env.CHASE_TAG:
-					message.channel.send('It\'s not gay if you\'re underway.');
+					channel.send('It\'s not gay if you\'re underway.');
 					break;
 				default:
-					message.channel.send('pong');
+					channel.send('pong');
 			}
 		}
 
 		if (message.content === '!ching') {
-			message.channel.send('chong');
+			channel.send('chong');
 		}
 
 		if (message.content === '!bing') {
-			message.channel.send('bong');
+			channel.send('bong');
 		}
 
 		if (message.content === '!listen') {
-			if(!messageNathanInterval) {
-				messageNathanInterval = setInterval(messageNathan, 3000);
+			if(!intervalChannels[channel.id]) {
+				intervalChannels[channel.id] = setInterval(() => {
+					messageNathan(channel);
+				}, 3000);
 			}
 		}
 
 		if (message.content === '!stop') {
-			if(messageNathanInterval) {
-				clearInterval(messageNathanInterval);
+			if(intervalChannels[channel.id]) {
+				clearInterval(intervalChannels[channel.id]);
 			}
 
-			messageNathanInterval = null;
+			intervalChannels[channel.id] = null;
 		}
 
 		if (message.content === '!wormhole') {
-			const apiMessage = new Discord.APIMessage(message.channel, {
+			const apiMessage = new Discord.APIMessage(channel, {
 				content: '<@127296623779774464> wormhole send poop',
 				disableMentions: 'none',
 			});
-			message.channel.send(apiMessage);
+			channel.send(apiMessage);
 		}
 	}
 });
 
 function isValidUser(author) {
-	return !author.bot;
+	return !author.bot && (author.tag !== process.env.JESIKA_TAG);
 }
 
-function messageNathan() {
-	const apiMessage = new Discord.APIMessage(client.channels.cache.get('234762591107284992'), {
+function messageNathan(channel) {
+	const apiMessage = new Discord.APIMessage(channel, {
 		content: '<@235548090050805770> Nathan! Listen!',
 		disableMentions: 'none',
 	});
-	client.channels.cache.get('234762591107284992').send(apiMessage);
+	channel.send(apiMessage);
 }
