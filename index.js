@@ -108,7 +108,7 @@ function messageNathan(channel) {
 }
 
 function handleWeather(message) {
-	const query = message.content.replace('!weather', '');
+	let query = message.content.replace('!weather', '');
 
 	if(query.trim() === '') {
 		switch (message.author.tag) {
@@ -129,6 +129,7 @@ function handleWeather(message) {
 				break;
 			default:
 				query = '';
+		}
 	}
 
 	const geocodeOptions = {
