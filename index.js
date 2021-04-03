@@ -110,6 +110,27 @@ function messageNathan(channel) {
 function handleWeather(message) {
 	const query = message.content.replace('!weather', '');
 
+	if(query.trim() === '') {
+		switch (message.author.tag) {
+			case process.env.MATT_TAG:
+				query = 'chicago,il';
+				break;
+			case process.env.JESIKA_TAG:
+				query = 'galesburg,il';
+				break;
+			case process.env.JARED_TAG:
+				query = 'galesburg,il';
+				break;
+			case process.env.NATHAN_TAG:
+				query = 'madison,wi';
+				break;
+			case process.env.CHASE_TAG:
+				query = 'monterey,ca';
+				break;
+			default:
+				query = '';
+	}
+
 	const geocodeOptions = {
 		method: 'GET',
 		url: 'https://api.geocod.io/v1.6/geocode',
