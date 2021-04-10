@@ -177,10 +177,10 @@ async function handleWeather(message) {
 
 async function handleConch(message) {
 	const questionWords = [
-		'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 
+		'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 'should', 'shouldnt', 'shall', 
 	];
 	const responses = [
-		'Maybe someday.', 'I don\'t think so.', 'No.', 'Yes.', 'When hell freezes over.', 'Absolutely.',
+		'Maybe someday.', 'I don\'t think so.', 'No.', 'When hell freezes over.', 'Yes.', 'Absolutely.',
 	];
 
 	const question = message.content.replace('$conch', '').replace(/[^a-zA-Z\s:]/g, '').trim().toLowerCase().split(' ');
