@@ -23,7 +23,7 @@ client.on('message', message => {
 		console.log(JSON.stringify(message.author.username));
 		console.log(JSON.stringify(message.author.tag));
 
-		if (message.content === '!ping') {
+		if (message.content === '$ping') {
 			switch (message.author.tag) {
 				case process.env.MATT_TAG:
 					channel.send('pong');
@@ -52,19 +52,23 @@ client.on('message', message => {
 			}
 		}
 
-		if (message.content === '!ching') {
+		if (message.content === '$ching') {
 			channel.send('chong');
 		}
 
-		if (message.content.includes('!weather')) {
+		if (message.content.includes('$weather')) {
 			handleWeather(message);
 		}
 
-		if (message.content === '!bing') {
+		if (message.content.includes('$conch')) {
+			handleConch(message);
+		}
+
+		if (message.content === '$bing') {
 			channel.send('bong');
 		}
 
-		if (message.content === '!listen') {
+		if (message.content === '$listen') {
 			if (message.author.tag !== process.env.MATT_TAG) {
 				channel.send('No.');
 				return;
@@ -77,20 +81,12 @@ client.on('message', message => {
 			}
 		}
 
-		if (message.content === '!stop') {
+		if (message.content === '$stop') {
 			if (intervalChannels[channel.id]) {
 				clearInterval(intervalChannels[channel.id]);
 			}
 
 			intervalChannels[channel.id] = null;
-		}
-
-		if (message.content === '!wormhole') {
-			const apiMessage = new Discord.APIMessage(channel, {
-				content: '<@127296623779774464> wormhole send poop',
-				disableMentions: 'none',
-			});
-			channel.send(apiMessage);
 		}
 	}
 });
@@ -107,8 +103,8 @@ function messageNathan(channel) {
 	channel.send(apiMessage);
 }
 
-function handleWeather(message) {
-	let query = message.content.replace('!weather', '');
+async function handleWeather(message) {
+	let query = message.content.replace('$weather', '');
 
 	if(query.trim() === '') {
 		switch (message.author.tag) {
@@ -158,7 +154,7 @@ function handleWeather(message) {
 				console.log(weatherRes.data.weather);
 				switch (weatherRes.data.cod) {
 					case 200:
-						message.channel.send('It\'s ' + Math.round(weatherRes.data.main.temp) + '°F and ' + weatherRes.data.weather[0].description.toLowerCase() + ' in ' + city + ', ' + state + ' mothafucka.');
+						message.channel.send('It\'s ' + Math.round(weatherRes.data.main.temp) + '°F and ' + weatherRes.data.weather[0].description.toLowerCase() + ' in ' + ( city ? city + ', ' : '' ) + state + ' mothafucka.');
 						break;
 					default:
 						console.log(weatherRes);
@@ -177,4 +173,25 @@ function handleWeather(message) {
 		console.log(error);
 		return;
 	});
+}
+
+async function handleConch(message) {
+	const questionWords = [
+		'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 
+	];
+	const responses = [
+		'Maybe someday.', 'I don\'t think so.', 'No.', 'Yes.', 'When hell freezes over.', 'Absolutely.',
+	];
+
+	const question = message.content.replace('$conch', '').replace(/[^a-zA-Z\s:]/g, '').trim().toLowerCase().split(' ');
+	
+	if((question.length >= 3) && questionWords.includes(question[0])) {
+		const timeout = (Math.floor(Math.random() * (6 - 2)) + 2) * 1000; // Random between 2 and 5 seconds
+		
+		setTimeout(() => {
+			message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
+		}, timeout);
+	} else {
+		message.channel.send('Ask a yes or no question.');
+	}
 }
