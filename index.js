@@ -18,11 +18,6 @@ client.on('message', message => {
 	const channel = message.channel;
 
 	if (isValidUser(message.author)) {
-		console.log(JSON.stringify(message));
-		console.log(JSON.stringify(message.author.id));
-		console.log(JSON.stringify(message.author.username));
-		console.log(JSON.stringify(message.author.tag));
-
 		if (message.content === '$ping') {
 			switch (message.author.tag) {
 				case process.env.MATT_TAG:
@@ -56,6 +51,10 @@ client.on('message', message => {
 			channel.send('chong');
 		}
 
+		if (message.content === '$bing') {
+			channel.send('bong');
+		}
+
 		if (message.content.includes('$weather')) {
 			handleWeather(message);
 		}
@@ -64,35 +63,39 @@ client.on('message', message => {
 			handleConch(message);
 		}
 
-		if (message.content === '$bing') {
-			channel.send('bong');
-		}
-
 		if (message.content === '$listen') {
-			if (message.author.tag !== process.env.MATT_TAG) {
-				channel.send('No.');
-				return;
-			}
-
-			if (!intervalChannels[channel.id]) {
-				intervalChannels[channel.id] = setInterval(() => {
-					messageNathan(channel);
-				}, 3000);
-			}
+			handleListen(message);
 		}
 
 		if (message.content === '$stop') {
-			if (intervalChannels[channel.id]) {
-				clearInterval(intervalChannels[channel.id]);
-			}
-
-			intervalChannels[channel.id] = null;
+			handleListenStop(message);
 		}
 	}
 });
 
 function isValidUser(author) {
 	return !author.bot;
+}
+
+function handleListen(message) {
+	if (message.author.tag !== process.env.MATT_TAG) {
+		message.channel.send('No.');
+		return;
+	}
+
+	if (!intervalChannels[message.channel.id]) {
+		intervalChannels[message.channel.id] = setInterval(() => {
+			messageNathan(message.channel);
+		}, 3000);
+	}
+}
+
+function handleListenStop(message) {
+	if (intervalChannels[message.channel.id]) {
+		clearInterval(intervalChannels[message.channel.id]);
+	}
+
+	intervalChannels[message.channel.id] = null;
 }
 
 function messageNathan(channel) {
@@ -106,7 +109,7 @@ function messageNathan(channel) {
 async function handleWeather(message) {
 	let query = message.content.replace('$weather', '');
 
-	if(query.trim() === '') {
+	if (query.trim() === '') {
 		switch (message.author.tag) {
 			case process.env.MATT_TAG:
 				query = 'chicago,il';
@@ -122,6 +125,12 @@ async function handleWeather(message) {
 				break;
 			case process.env.CHASE_TAG:
 				query = 'monterey,ca';
+				break;
+			case process.env.BAYLEIGH_TAG:
+				query = 'colorado springs,co';
+				break;
+			case process.env.BEN_TAG:
+				query = 'bartonville,il';
 				break;
 			default:
 				query = '';
@@ -154,7 +163,7 @@ async function handleWeather(message) {
 				console.log(weatherRes.data.weather);
 				switch (weatherRes.data.cod) {
 					case 200:
-						message.channel.send('It\'s ' + Math.round(weatherRes.data.main.temp) + '°F and ' + weatherRes.data.weather[0].description.toLowerCase() + ' in ' + ( city ? city + ', ' : '' ) + state + ' mothafucka.');
+						message.channel.send('It\'s ' + Math.round(weatherRes.data.main.temp) + '°F and ' + weatherRes.data.weather[0].description.toLowerCase() + ' in ' + (city ? city + ', ' : '') + state + ' mothafucka.');
 						break;
 					default:
 						console.log(weatherRes);
@@ -177,21 +186,23 @@ async function handleWeather(message) {
 
 async function handleConch(message) {
 	const questionWords = [
-		'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 'should', 'shouldnt', 'shall', 
+		'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 'should', 'shouldnt', 'shall',
 	];
 	const responses = [
 		'Maybe someday.', 'I don\'t think so.', 'No.', 'When hell freezes over.', 'Yes.', 'Absolutely.',
 	];
 
 	const question = message.content.replace('$conch', '').replace(/[^a-zA-Z\s:]/g, '').trim().toLowerCase().split(' ');
-	
-	if((question.length >= 3) && questionWords.includes(question[0])) {
-		const timeout = (Math.floor(Math.random() * (6 - 2)) + 2) * 1000; // Random between 2 and 5 seconds
-		
+
+	if ((question.length >= 3) && questionWords.includes(question[0])) {
+		// Random between 2 and 5 seconds
+		const timeout = (Math.floor(Math.random() * (6 - 2)) + 2) * 1000;
+
 		setTimeout(() => {
 			message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
 		}, timeout);
-	} else {
+	}
+	else {
 		message.channel.send('Ask a yes or no question.');
 	}
 }
