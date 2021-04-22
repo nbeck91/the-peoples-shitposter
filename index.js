@@ -124,6 +124,12 @@ function messageNathan(channel) {
 	channel.send(apiMessage);
 }
 
+function sometimesFire() {
+	if(Math.floor(Math.random() * 1001) === 420) return true;
+	else return false;
+}
+
+
 async function handleWeather(message) {
 	let query = message.content.replace('$weather', '');
 
@@ -230,13 +236,19 @@ async function handleTaylorQuote(message) {
 		method: 'GET',
 		url: 'https://api.taylor.rest/',
 	};
-
-	axios.request(options).then((res) => {
-		message.channel.send('"' + res.data.quote + '"' + ' - ' + res.data.author);
-	}).catch((error) => {
-		message.channel.send('"This bot sucks." - Taylor Swift');
-		console.log(error);
-	});
+	if(sometimesFire())
+	{
+		message.channel.send('“The victor will never be asked if he told the truth. ”' + ' - Taylor Swift?');
+	}
+	else
+	{
+		axios.request(options).then((res) => {
+			message.channel.send('"' + res.data.quote + '"' + ' - ' + res.data.author);
+		}).catch((error) => {
+			message.channel.send('"This bot sucks." - Taylor Swift');
+			console.log(error);
+		});
+	}
 }
 
 async function handleJoke(message) {
