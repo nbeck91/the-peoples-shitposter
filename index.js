@@ -70,6 +70,18 @@ client.on('message', message => {
 		if (message.content === '$stop') {
 			handleListenStop(message);
 		}
+
+		if (message.content === '$taylor') {
+			handleTaylorQuote(message);
+		}
+
+		if (message.content === '$joke') {
+			handleJoke(message);
+		}
+
+		if (message.content === '$pun') {
+			handlePun(message);
+		}
 	}
 });
 
@@ -205,4 +217,64 @@ async function handleConch(message) {
 	else {
 		message.channel.send('Ask a yes or no question.');
 	}
+}
+
+async function handleTaylorQuote(message) {
+	const options = {
+		method: 'GET',
+		url: 'https://api.taylor.rest/',
+	};
+
+	axios.request(options).then((res) => {
+		message.channel.send('"' + res.data.quote + '"' + ' - ' + res.data.author);
+	}).catch((error) => {
+		message.channel.send('"This bot sucks." - Taylor Swift');
+		console.log(error);
+	});
+}
+
+async function handleJoke(message) {
+	const options = {
+		method: 'GET',
+		url: 'https://v2.jokeapi.dev/joke/Dark',
+	};
+
+	axios.request(options).then((res) => {
+		if (res.data.type === 'twopart') {
+			message.channel.send(res.data.setup + '...');
+			setTimeout(() => {
+				message.channel.send(res.data.delivery);
+			}, 5000);
+		} else {
+			setTimeout(() => {
+				message.channel.send(res.data.joke);
+			}, 2000);
+		}
+	}).catch((error) => {
+		message.channel.send('The joke is that this API doesn\'t work.');
+		console.log(error);
+	});
+}
+
+async function handlePun(message) {
+	const options = {
+		method: 'GET',
+		url: 'https://v2.jokeapi.dev/joke/Pun',
+	};
+
+	axios.request(options).then((res) => {
+		if (res.data.type === 'twopart') {
+			message.channel.send(res.data.setup + '...');
+			setTimeout(() => {
+				message.channel.send(res.data.delivery);
+			}, 5000);
+		} else {
+			setTimeout(() => {
+				message.channel.send(res.data.joke);
+			}, 2000);
+		}
+	}).catch((error) => {
+		message.channel.send('The joke is that this API doesn\'t work.');
+		console.log(error);
+	});
 }
