@@ -153,9 +153,6 @@ async function handleWeather(message) {
 			case process.env.BAYLEIGH_TAG:
 				query = 'colorado springs,co';
 				break;
-			case process.env.BEN_TAG:
-				query = 'bartonville,il';
-				break;
 			default:
 				query = '';
 		}
