@@ -148,7 +148,7 @@ async function handleWeather(message) {
 				query = 'madison,wi';
 				break;
 			case process.env.CHASE_TAG:
-				query = 'monterey,ca';
+				query = 'seattle,wa';
 				break;
 			case process.env.BAYLEIGH_TAG:
 				query = 'colorado springs,co';
