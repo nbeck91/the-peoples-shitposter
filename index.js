@@ -1,20 +1,26 @@
+// Dependencies
+const axios = require('axios').default;
 const dotenv = require('dotenv');
 dotenv.config();
 
-const Discord = require('discord.js');
-const client = new Discord.Client();
-
-const axios = require('axios').default;
-
-const intervalChannels = {};
-
+// Require the necessary discord.js classes
+const { Client, Events, GatewayIntentBits } = require('discord.js');
 const bot_token = process.env.ENVIRONMENT === 'DEV' ? process.env.DEV_BOT_TOKEN : process.env.BOT_TOKEN;
+
+// Create a new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+// When the client is ready, run this code (only once).
+// The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
+// It makes some properties non-nullable.
+
+client.once(Events.ClientReady, readyClient => {
+	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+});
 
 client.login(bot_token);
 
-client.once('ready', () => {
-	console.log('Ready!');
-});
+//const intervalChannels = {};
 
 client.on('message', message => {
 	const channel = message.channel;
@@ -110,7 +116,7 @@ async function handleWeather(message) {
 
 	const geocodeOptions = {
 		method: 'GET',
-		url: 'https://api.geocod.io/v1.6/geocode',
+		url: 'https://api.geocod.io/v1.7/geocode',
 		params: { q: query, api_key: process.env.GEOCODIO_API_KEY, limit: 1 },
 	};
 
@@ -122,11 +128,11 @@ async function handleWeather(message) {
 
 			const options = {
 				method: 'GET',
-				url: 'https://community-open-weather-map.p.rapidapi.com/weather',
-				params: { lat: location.lat, lon: location.lng, lang: 'en', units: 'imperial' },
+				url: '/weather?appid=da0f9c8d90bde7e619c3ec47766a42f4&units=standard',
+				params: { q: address_components.zip, lang: 'en', units: 'imperial' },
 				headers: {
 					'x-rapidapi-key': process.env.WEATHER_API_KEY,
-					'x-rapidapi-host': 'community-open-weather-map.p.rapidapi.com',
+					'x-rapidapi-host': 'openweather43.p.rapidapi.com',
 				},
 			};
 
