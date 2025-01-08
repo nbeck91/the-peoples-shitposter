@@ -22,31 +22,20 @@ client.on('message', message => {
 	if (isValidUser(message.author)) {
 		if (message.content === '$ping') {
 			switch (message.author.tag) {
-				case process.env.MATT_TAG:
+				case process.env.NATE_TAG:
 					channel.send('pong');
 					break;
-				case process.env.JESIKA_TAG:
-					channel.send('No girls allowed.');
-					break;
-				case process.env.JARED_TAG:
-					channel.send('poop');
-					break;
-				case process.env.NATHAN_TAG:
-					channel.send('Wtf');
-					break;
-				case process.env.CHASE_TAG:
-					channel.send('It\'s not gay if you\'re underway.');
+				case process.env.TAYLOR_TAG:
+					channel.send('hyuck tuah');
 					break;
 				default:
 					channel.send('What the fuck did you just fucking say about me, you little bitch? I\'ll have you know I graduated top of my class in the Navy Seals, and I\'ve been involved in numerous secret raids on Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I\'m the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You\'re fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that\'s just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little "clever" comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn\'t, you didn\'t, and now you\'re paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You\'re fucking dead, kiddo.');
 			}
 		}
 
-		if (message.author.tag === process.env.NATHAN_TAG) {
-			if (message.content.toLowerCase().includes('wtf')) {
-				const wtf = require('./wtf.json').wtf;
-				channel.send(wtf[Math.floor(Math.random() * wtf.length)]);
-			}
+		if (message.content.toLowerCase().includes('wtf')) {
+			const wtf = require('./wtf.json').wtf;
+			channel.send(wtf[Math.floor(Math.random() * wtf.length)]);
 		}
 
 		if (message.content === '$ching') {
@@ -77,10 +66,6 @@ client.on('message', message => {
 			handleListenStop(message);
 		}
 
-		if (message.content === '$taylor') {
-			handleTaylorQuote(message);
-		}
-
 		if (message.content === '$joke') {
 			handleJoke(message);
 		}
@@ -96,15 +81,9 @@ function isValidUser(author) {
 }
 
 function handleListen(message) {
-	if (message.author.tag !== process.env.MATT_TAG) {
+	if (message.author.tag !== process.env.NATE_TAG) {
 		message.channel.send('No.');
 		return;
-	}
-
-	if (!intervalChannels[message.channel.id]) {
-		intervalChannels[message.channel.id] = setInterval(() => {
-			messageNathan(message.channel);
-		}, 3000);
 	}
 }
 
@@ -116,45 +95,16 @@ function handleListenStop(message) {
 	intervalChannels[message.channel.id] = null;
 }
 
-function messageNathan(channel) {
-	const apiMessage = new Discord.APIMessage(channel, {
-		content: '<@216453188847534081> Jarebear! Listen!',
-		disableMentions: 'none',
-	});
-	channel.send(apiMessage);
-}
-
-function sometimesFire() {
-	if(Math.floor(Math.random() * 1001) === 420) return true;
-	else return false;
-}
-
-
 async function handleWeather(message) {
 	let query = message.content.replace('$weather', '');
 
 	if (query.trim() === '') {
 		switch (message.author.tag) {
-			case process.env.MATT_TAG:
-				query = 'chicago,il';
-				break;
-			case process.env.JESIKA_TAG:
-				query = 'galesburg,il';
-				break;
-			case process.env.JARED_TAG:
-				query = 'galesburg,il';
-				break;
-			case process.env.NATHAN_TAG:
-				query = 'madison,wi';
-				break;
-			case process.env.CHASE_TAG:
-				query = 'seattle,wa';
-				break;
-			case process.env.BAYLEIGH_TAG:
-				query = 'colorado springs,co';
+			case process.env.NATE_TAG:
+				query = 'sun prairie,wi';
 				break;
 			default:
-				query = '';
+				query = 'madison,wi';
 		}
 	}
 
@@ -225,26 +175,6 @@ async function handleConch(message) {
 	}
 	else {
 		message.channel.send('Ask a yes or no question.');
-	}
-}
-
-async function handleTaylorQuote(message) {
-	const options = {
-		method: 'GET',
-		url: 'https://api.taylor.rest/',
-	};
-	if(sometimesFire())
-	{
-		message.channel.send('“The victor will never be asked if he told the truth. ”' + ' - Taylor Swift?');
-	}
-	else
-	{
-		axios.request(options).then((res) => {
-			message.channel.send('"' + res.data.quote + '"' + ' - ' + res.data.author);
-		}).catch((error) => {
-			message.channel.send('"This bot sucks." - Taylor Swift');
-			console.log(error);
-		});
 	}
 }
 
