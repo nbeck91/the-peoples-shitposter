@@ -9,10 +9,6 @@ module.exports = {
             option.setName('location')
                 .setDescription('Location for weather data.')),
     async execute(interaction) {
-        // interaction.user is the object representing the User who ran the command
-        // interaction.member is the GuildMember object, which represents the user in the specific guild
-    //     await interaction.reply(`${interaction.options.getString('location')} was selected by ${interaction.user.username}, who joined on ${interaction.member.joinedAt}.`);
-    // },
 		const location = interaction.options.getString('location') ?? '53719';
 
         const geocodeOptions = {

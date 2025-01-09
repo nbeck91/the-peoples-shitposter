@@ -24,32 +24,29 @@ module.exports = {
             const wtf = require('../wtf.json').wtf;
             message.reply(wtf[Math.floor(Math.random() * wtf.length)]);
         }
+
+        if (message.content.toLowerCase().includes('$conch')) {
+            const questionWords = [
+                'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 'should', 'shouldnt', 'shall',
+            ];
+
+            const responses = [
+                'Maybe someday.', 'I don\'t think so.', 'No.', 'When hell freezes over.', 'Yes.', 'Absolutely.',
+            ];
+        
+            const question = message.content.replace('$conch', '').replace(/[^a-zA-Z\s:]/g, '').trim().toLowerCase().split(' ');
+        
+            if ((question.length >= 3) && questionWords.includes(question[0])) {
+                // Random between 2 and 5 seconds
+                const timeout = (Math.floor(Math.random() * (6 - 2)) + 2) * 1000;
+        
+                setTimeout(() => {
+                    message.reply(responses[Math.floor(Math.random() * responses.length)]);
+                }, timeout);
+            }
+            else {
+                message.reply('Ask a yes or no question.');
+            }
+        }
     },
 };
-
-////////////////
-
-// Old Code
-
-// async function handleConch(message) {
-// 	const questionWords = [
-// 		'am', 'are', 'is', 'isnt', 'was', 'wasnt', 'were', 'werent', 'has', 'hasnt', 'have', 'havent', 'do', 'does', 'dont', 'doesnt', 'did', 'didnt', 'can', 'cant', 'could', 'couldnt', 'will', 'wont', 'would', 'wouldnt', 'should', 'shouldnt', 'shall',
-// 	];
-// 	const responses = [
-// 		'Maybe someday.', 'I don\'t think so.', 'No.', 'When hell freezes over.', 'Yes.', 'Absolutely.',
-// 	];
-
-// 	const question = message.content.replace('$conch', '').replace(/[^a-zA-Z\s:]/g, '').trim().toLowerCase().split(' ');
-
-// 	if ((question.length >= 3) && questionWords.includes(question[0])) {
-// 		// Random between 2 and 5 seconds
-// 		const timeout = (Math.floor(Math.random() * (6 - 2)) + 2) * 1000;
-
-// 		setTimeout(() => {
-// 			message.channel.send(responses[Math.floor(Math.random() * responses.length)]);
-// 		}, timeout);
-// 	}
-// 	else {
-// 		message.channel.send('Ask a yes or no question.');
-// 	}
-// }
