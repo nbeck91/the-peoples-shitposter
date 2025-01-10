@@ -45,4 +45,15 @@ for (const file of eventFiles) {
 	}
 }
 
+// Init db
+const dbmod = require('./dbmod/dbmod');
+const dbpath = './dbmod/dbmod.json';
+
+if (fs.existsSync(dbpath)) {
+  console.log('dbpath found.');
+} else {
+  console.log('dbpath not found. Seeding.');
+  dbmod.dbseed();
+}
+
 client.login(bot_token);
