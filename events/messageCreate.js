@@ -21,7 +21,7 @@ module.exports = {
         }
 
         if (message.content.toLowerCase().includes('wtf')) {
-            const wtf = require('../wtf.json').wtf;
+            const wtf = require('../db/db.json').wtf;
             message.reply(wtf[Math.floor(Math.random() * wtf.length)]);
         }
 
@@ -47,6 +47,13 @@ module.exports = {
             else {
                 message.reply('Ask a yes or no question.');
             }
+        }
+
+        if (message.content === 'mandomail') {
+            const controllers=require('../mandomail/controllers');
+            const output = JSON.stringify(controllers.getUser)
+            console.log(controllers.getUser);
+            console.log(output)
         }
     },
 };
